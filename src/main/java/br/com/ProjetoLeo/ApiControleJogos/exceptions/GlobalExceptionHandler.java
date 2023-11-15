@@ -29,4 +29,11 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
+    @ExceptionHandler(JogoAlreadyExistsException.class)
+    public ResponseEntity<Map<String, String>> trataErroJogoExistente(JogoAlreadyExistsException exception) {
+        Map<String, String> response = new HashMap<>();
+        response.put("erro", exception.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    }
+
 }

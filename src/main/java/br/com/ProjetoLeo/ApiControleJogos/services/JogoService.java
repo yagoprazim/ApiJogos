@@ -2,6 +2,7 @@ package br.com.ProjetoLeo.ApiControleJogos.services;
 
 import br.com.ProjetoLeo.ApiControleJogos.dtos.request.JogoRequestDto;
 import br.com.ProjetoLeo.ApiControleJogos.dtos.response.JogoResponseDto;
+import br.com.ProjetoLeo.ApiControleJogos.exceptions.JogoAlreadyExistsException;
 import br.com.ProjetoLeo.ApiControleJogos.exceptions.ResourceNotFoundException;
 import br.com.ProjetoLeo.ApiControleJogos.mappers.JogoMapper;
 import br.com.ProjetoLeo.ApiControleJogos.models.JogoModel;
@@ -33,7 +34,7 @@ public class JogoService {
 
     public JogoResponseDto registrarJogo(JogoRequestDto jogoRequestDto){
         if (jogoRepository.existsByTitulo(jogoRequestDto.titulo())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já existe um jogo registrado com esse nome.");
+            throw new JogoAlreadyExistsException("Já existe um jogo registrado com esse nome.");
         }
 
         JogoModel jogoModel = JogoMapper.INSTANCE.converteParaModel(jogoRequestDto);
@@ -48,7 +49,7 @@ public class JogoService {
 
         if (!jogoModel.getTitulo().equals(jogoRequestDto.titulo()) &&
                 jogoRepository.existsByTitulo(jogoRequestDto.titulo())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já existe um jogo registrado com esse nome.");
+            throw new JogoAlreadyExistsException("Já existe um jogo registrado com esse nome.");
         }
 
         JogoMapper.INSTANCE.atualizaModelAPartirDeDto(jogoRequestDto, jogoModel);
