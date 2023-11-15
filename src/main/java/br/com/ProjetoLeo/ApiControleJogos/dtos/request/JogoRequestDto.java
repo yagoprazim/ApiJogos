@@ -20,5 +20,7 @@ public record JogoRequestDto(
         String plataforma,
 
         @NotNull(message = "Informe o preço do jogo.")
-        BigDecimal preco
+        BigDecimal preco,
+
+        String descricao
 ) { }

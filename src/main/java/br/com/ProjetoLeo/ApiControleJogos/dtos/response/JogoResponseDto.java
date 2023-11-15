@@ -14,5 +14,7 @@ public record JogoResponseDto(
 
     String plataforma,
 
-    BigDecimal preco) {
+    BigDecimal preco,
+
+    String descricao) {
 }

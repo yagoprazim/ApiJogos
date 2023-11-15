@@ -32,4 +32,6 @@ public class JogoModel {
 
     @Column(nullable = false)
     private BigDecimal preco;
+
+    private String descricao;
 }
