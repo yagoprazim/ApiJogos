@@ -43,12 +43,13 @@ public class JogoService {
     }
 
     public JogoResponseDto atualizarJogo(Long id, JogoRequestDto jogoRequestDto){
-        if (jogoRepository.existsByTitulo(jogoRequestDto.titulo())) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já existe um jogo registrado com esse nome.");
-        }
-
         JogoModel jogoModel = jogoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Jogo não encontrado."));
+
+        if (!jogoModel.getTitulo().equals(jogoRequestDto.titulo()) &&
+                jogoRepository.existsByTitulo(jogoRequestDto.titulo())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já existe um jogo registrado com esse nome.");
+        }
 
         JogoMapper.INSTANCE.atualizaModelAPartirDeDto(jogoRequestDto, jogoModel);
         JogoModel jogoAtualizado = jogoRepository.save(jogoModel);
