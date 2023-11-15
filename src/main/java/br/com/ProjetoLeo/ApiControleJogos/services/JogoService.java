@@ -9,7 +9,9 @@ import br.com.ProjetoLeo.ApiControleJogos.repositories.JogoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +32,10 @@ public class JogoService {
     }
 
     public JogoResponseDto registrarJogo(JogoRequestDto jogoRequestDto){
+        if (jogoRepository.existsByTitulo(jogoRequestDto.titulo())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já existe um jogo registrado com esse nome.");
+        }
+
         JogoModel jogoModel = JogoMapper.INSTANCE.converteParaModel(jogoRequestDto);
         JogoModel jogoRegistrado = jogoRepository.save(jogoModel);
 
@@ -37,6 +43,10 @@ public class JogoService {
     }
 
     public JogoResponseDto atualizarJogo(Long id, JogoRequestDto jogoRequestDto){
+        if (jogoRepository.existsByTitulo(jogoRequestDto.titulo())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Já existe um jogo registrado com esse nome.");
+        }
+
         JogoModel jogoModel = jogoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Jogo não encontrado."));
 
