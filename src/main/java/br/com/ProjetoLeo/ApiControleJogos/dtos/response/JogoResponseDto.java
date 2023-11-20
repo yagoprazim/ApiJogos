@@ -1,5 +1,7 @@
 package br.com.ProjetoLeo.ApiControleJogos.dtos.response;
 
+import org.springframework.hateoas.Links;
+
 import java.math.BigDecimal;
 
 public record JogoResponseDto(
@@ -16,5 +18,8 @@ public record JogoResponseDto(
 
     BigDecimal preco,
 
-    String descricao) {
+    String descricao,
+
+    Links links) {
+
 }

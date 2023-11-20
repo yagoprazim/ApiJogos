@@ -10,9 +10,7 @@ import br.com.ProjetoLeo.ApiControleJogos.repositories.JogoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -20,16 +18,19 @@ public class JogoService {
 
     private final JogoRepository jogoRepository;
 
-    public Page<JogoResponseDto> listarTodosOsJogos(Pageable paginacao){
-        return jogoRepository.findAll(paginacao)
-                .map(JogoMapper.INSTANCE::converteParaResponseDto);
+    public Page<JogoResponseDto> listarTodosOsJogos(Pageable paginacao) {
+        Page<JogoModel> jogos = jogoRepository.findAll(paginacao);
+        JogoMapper.INSTANCE.listarTodosOsJogosComHateoas(jogos.getContent());
+
+        return jogos.map(JogoMapper.INSTANCE::converteParaResponseDto);
     }
 
-    public JogoResponseDto listarUmJogo(Long id){
+
+    public JogoResponseDto listarUmJogo(Long id) {
         JogoModel jogoModel = jogoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Jogo não encontrado."));
 
-        return JogoMapper.INSTANCE.converteParaResponseDto(jogoModel);
+        return JogoMapper.INSTANCE.listarUmJogoComHateoas(jogoModel);
     }
 
     public JogoResponseDto registrarJogo(JogoRequestDto jogoRequestDto){
@@ -40,7 +41,7 @@ public class JogoService {
         JogoModel jogoModel = JogoMapper.INSTANCE.converteParaModel(jogoRequestDto);
         JogoModel jogoRegistrado = jogoRepository.save(jogoModel);
 
-        return JogoMapper.INSTANCE.converteParaResponseDto(jogoRegistrado);
+        return JogoMapper.INSTANCE.listarUmJogoComHateoas(jogoRegistrado);
     }
 
     public JogoResponseDto atualizarJogo(Long id, JogoRequestDto jogoRequestDto){
@@ -55,7 +56,7 @@ public class JogoService {
         JogoMapper.INSTANCE.atualizaModelAPartirDeDto(jogoRequestDto, jogoModel);
         JogoModel jogoAtualizado = jogoRepository.save(jogoModel);
 
-        return JogoMapper.INSTANCE.converteParaResponseDto(jogoAtualizado);
+        return JogoMapper.INSTANCE.listarUmJogoComHateoas(jogoAtualizado);
     }
 
     public void deletarJogo(Long id){

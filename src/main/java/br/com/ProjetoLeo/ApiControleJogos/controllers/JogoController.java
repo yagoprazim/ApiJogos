@@ -2,6 +2,7 @@ package br.com.ProjetoLeo.ApiControleJogos.controllers;
 
 import br.com.ProjetoLeo.ApiControleJogos.dtos.request.JogoRequestDto;
 import br.com.ProjetoLeo.ApiControleJogos.dtos.response.JogoResponseDto;
+import br.com.ProjetoLeo.ApiControleJogos.models.JogoModel;
 import br.com.ProjetoLeo.ApiControleJogos.services.JogoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +23,9 @@ public class JogoController {
 
     @GetMapping
     public ResponseEntity<Page<JogoResponseDto>> listarTodosOsJogos(@PageableDefault @ParameterObject Pageable paginacao) {
-        Page<JogoResponseDto> jogo = jogoService.listarTodosOsJogos(paginacao);
+        Page<JogoResponseDto> jogos = jogoService.listarTodosOsJogos(paginacao);
 
-        return ResponseEntity.ok(jogo);
+        return ResponseEntity.ok(jogos);
     }
 
     @GetMapping("/{id}")
