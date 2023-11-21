@@ -7,10 +7,12 @@ import br.com.ProjetoLeo.ApiControleJogos.exceptions.ResourceNotFoundException;
 import br.com.ProjetoLeo.ApiControleJogos.mappers.JogoMapper;
 import br.com.ProjetoLeo.ApiControleJogos.models.JogoModel;
 import br.com.ProjetoLeo.ApiControleJogos.repositories.JogoRepository;
-import lombok.RequiredArgsConstructor;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
@@ -30,7 +32,7 @@ public class JogoService {
         JogoModel jogoModel = jogoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Jogo não encontrado."));
 
-        return JogoMapper.INSTANCE.listarUmJogoComHateoas(jogoModel);
+        return JogoMapper.INSTANCE.listarUmJogoComHateoasResponseDto(jogoModel);
     }
 
     public JogoResponseDto registrarJogo(JogoRequestDto jogoRequestDto){
@@ -41,7 +43,7 @@ public class JogoService {
         JogoModel jogoModel = JogoMapper.INSTANCE.converteParaModel(jogoRequestDto);
         JogoModel jogoRegistrado = jogoRepository.save(jogoModel);
 
-        return JogoMapper.INSTANCE.listarUmJogoComHateoas(jogoRegistrado);
+        return JogoMapper.INSTANCE.listarUmJogoComHateoasResponseDto(jogoRegistrado);
     }
 
     public JogoResponseDto atualizarJogo(Long id, JogoRequestDto jogoRequestDto){
@@ -56,7 +58,7 @@ public class JogoService {
         JogoMapper.INSTANCE.atualizaModelAPartirDeDto(jogoRequestDto, jogoModel);
         JogoModel jogoAtualizado = jogoRepository.save(jogoModel);
 
-        return JogoMapper.INSTANCE.listarUmJogoComHateoas(jogoAtualizado);
+        return JogoMapper.INSTANCE.listarUmJogoComHateoasResponseDto(jogoAtualizado);
     }
 
     public void deletarJogo(Long id){

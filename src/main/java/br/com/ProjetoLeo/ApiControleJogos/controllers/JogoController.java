@@ -2,10 +2,12 @@ package br.com.ProjetoLeo.ApiControleJogos.controllers;
 
 import br.com.ProjetoLeo.ApiControleJogos.dtos.request.JogoRequestDto;
 import br.com.ProjetoLeo.ApiControleJogos.dtos.response.JogoResponseDto;
-import br.com.ProjetoLeo.ApiControleJogos.models.JogoModel;
 import br.com.ProjetoLeo.ApiControleJogos.services.JogoService;
+
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,7 @@ public class JogoController {
 
     private final JogoService jogoService;
 
+    @Operation(summary = "Endpoint que lista todos os jogos, com paginação.")
     @GetMapping
     public ResponseEntity<Page<JogoResponseDto>> listarTodosOsJogos(@PageableDefault @ParameterObject Pageable paginacao) {
         Page<JogoResponseDto> jogos = jogoService.listarTodosOsJogos(paginacao);
@@ -28,6 +31,7 @@ public class JogoController {
         return ResponseEntity.ok(jogos);
     }
 
+    @Operation(summary = "Endpoint que lista um jogo específico, a partir do ID fornecido.")
     @GetMapping("/{id}")
     public ResponseEntity<JogoResponseDto> listarUmJogo(@PathVariable Long id) {
         JogoResponseDto jogo = jogoService.listarUmJogo(id);
@@ -35,6 +39,7 @@ public class JogoController {
         return ResponseEntity.ok(jogo);
     }
 
+    @Operation(summary = "Endpoint que cria um jogo.")
     @PostMapping
     public ResponseEntity<JogoResponseDto> registrarJogo(@RequestBody @Valid JogoRequestDto jogoRequestDto) {
         JogoResponseDto jogo = jogoService.registrarJogo(jogoRequestDto);
@@ -42,6 +47,7 @@ public class JogoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(jogo);
     }
 
+    @Operation(summary = "Endpoint que modifica as informações de um jogo já existente, a partir do ID fornecido.")
     @PutMapping("/{id}")
     public ResponseEntity<JogoResponseDto> atualizarJogo(@PathVariable Long id,
                                                          @RequestBody @Valid JogoRequestDto jogoRequestDto) {
@@ -50,6 +56,7 @@ public class JogoController {
         return ResponseEntity.ok(jogo);
     }
 
+    @Operation(summary = "Endpoint que deleta um jogo, a partir do ID fornecido.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarJogo(@PathVariable Long id) {
         jogoService.deletarJogo(id);
