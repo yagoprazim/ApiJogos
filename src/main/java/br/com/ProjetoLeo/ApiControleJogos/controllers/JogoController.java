@@ -61,6 +61,7 @@ public class JogoController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarJogo(@PathVariable Long id) {
         jogoService.deletarJogo(id);
+
         HttpHeaders headers = new HttpHeaders();
         headers.add("Result", "Jogo deletado com sucesso.");
 
