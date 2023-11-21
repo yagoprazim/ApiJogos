@@ -27,12 +27,16 @@ public interface JogoMapper {
     @Mapping(target = "id", ignore = true)
     void atualizaModelAPartirDeDto(JogoRequestDto jogoRequestDto, @MappingTarget JogoModel jogoModel);
 
-    default JogoResponseDto listarUmJogoComHateoasResponseDto(JogoModel jogoModel) {
+    default void linkParaListarTodosOsJogos(JogoModel jogoModel) {
         jogoModel.add(linkTo(methodOn(JogoController.class).listarTodosOsJogos(Pageable.unpaged())).withRel("Lista de Jogos"));
-        return converteParaResponseDto(jogoModel);
     }
 
-    default void listarTodosOsJogosComHateoas(List<JogoModel> jogos) {
+    default void linkParaListarUmJogo(JogoModel jogoModel) {
+        Long jogoId = jogoModel.getId();
+        jogoModel.add(linkTo(methodOn(JogoController.class).listarUmJogo(jogoId)).withSelfRel());
+    }
+
+    default void linkParaListarUmJogoLoop(List<JogoModel> jogos) {
         for (JogoModel jogo : jogos){
             Long jogoId = jogo.getId();
             jogo.add(linkTo(methodOn(JogoController.class).listarUmJogo(jogoId)).withSelfRel());

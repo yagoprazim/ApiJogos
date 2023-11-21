@@ -22,7 +22,7 @@ public class JogoService {
 
     public Page<JogoResponseDto> listarTodosOsJogos(Pageable paginacao) {
         Page<JogoModel> jogos = jogoRepository.findAll(paginacao);
-        JogoMapper.INSTANCE.listarTodosOsJogosComHateoas(jogos.getContent());
+        JogoMapper.INSTANCE.linkParaListarUmJogoLoop(jogos.getContent());
 
         return jogos.map(JogoMapper.INSTANCE::converteParaResponseDto);
     }
@@ -32,7 +32,9 @@ public class JogoService {
         JogoModel jogoModel = jogoRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Jogo não encontrado."));
 
-        return JogoMapper.INSTANCE.listarUmJogoComHateoasResponseDto(jogoModel);
+        JogoMapper.INSTANCE.linkParaListarTodosOsJogos(jogoModel);
+
+        return JogoMapper.INSTANCE.converteParaResponseDto(jogoModel);
     }
 
     public JogoResponseDto registrarJogo(JogoRequestDto jogoRequestDto){
@@ -42,8 +44,9 @@ public class JogoService {
 
         JogoModel jogoModel = JogoMapper.INSTANCE.converteParaModel(jogoRequestDto);
         JogoModel jogoRegistrado = jogoRepository.save(jogoModel);
+        JogoMapper.INSTANCE.linkParaListarUmJogo(jogoRegistrado);
 
-        return JogoMapper.INSTANCE.listarUmJogoComHateoasResponseDto(jogoRegistrado);
+        return JogoMapper.INSTANCE.converteParaResponseDto(jogoRegistrado);
     }
 
     public JogoResponseDto atualizarJogo(Long id, JogoRequestDto jogoRequestDto){
@@ -57,8 +60,9 @@ public class JogoService {
 
         JogoMapper.INSTANCE.atualizaModelAPartirDeDto(jogoRequestDto, jogoModel);
         JogoModel jogoAtualizado = jogoRepository.save(jogoModel);
+        JogoMapper.INSTANCE.linkParaListarUmJogo(jogoAtualizado);
 
-        return JogoMapper.INSTANCE.listarUmJogoComHateoasResponseDto(jogoAtualizado);
+        return JogoMapper.INSTANCE.converteParaResponseDto(jogoAtualizado);
     }
 
     public void deletarJogo(Long id){
