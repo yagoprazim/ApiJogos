@@ -97,7 +97,7 @@ Trata-se de uma **API Rest** desenvolvida com o **Spring Boot Framework 3.1.5 (J
      - Inclusive, optei por usar @RequiredArgsConstructor ao invés de @Autowired.
      - Tratamentos básicos, como: para verificar se um jogo existe ou não, ou se determinado dado está nulo ou não, etc, não passei isso no controller, ficando ele responsável apenas pelo chamamento dos services e ResponseEntity de forma simples - deixei essas responsabilidades de tratamento nos packages de: services + exceptions. Enquanto no controller apenas passei os statuscode de sucesso (200, 201, 204)...
   
-  7. __EXCEPTIONS:
+  7. __EXCEPTIONS__:
      - Em Exceptions, tratei as exceções básicas, de forma que no caso de erro 404, poderei personalizar as respostas de erro a partir das mensagens que coloquei nos services.
      - Em casos de erro 400 gerais, utilizei o dto 'ErrosListaDto' para gerarmos uma lista de erros tratados a partir do uso das annotations (@NotBlank, @NotNull, etc), de forma que na lista de erros, são retornadas mensagens personalizadas que eu defini. Como também, criei mais uma exception específica para tratamento de erro 400, para validar e personalizar a mensagem de erro que trata a restrição _'Unique'_ do título de um jogo.
 
