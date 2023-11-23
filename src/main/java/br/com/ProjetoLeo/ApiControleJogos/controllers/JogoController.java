@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -24,6 +26,7 @@ public class JogoController {
 
     private final JogoService jogoService;
 
+    @Cacheable("cacheListarTodosOsJogos")
     @Operation(summary = "Endpoint que lista todos os jogos, com paginação.")
     @GetMapping
     public ResponseEntity<Page<JogoResponseDto>> listarTodosOsJogos(@PageableDefault @ParameterObject Pageable paginacao) {
@@ -32,6 +35,7 @@ public class JogoController {
         return ResponseEntity.ok(jogos);
     }
 
+    @Cacheable(value = "cacheListarUmJogo", key = "#id")
     @Operation(summary = "Endpoint que lista um jogo específico, a partir do ID fornecido.")
     @GetMapping("/{id}")
     public ResponseEntity<JogoResponseDto> listarUmJogo(@PathVariable Long id) {
@@ -40,6 +44,7 @@ public class JogoController {
         return ResponseEntity.ok(jogo);
     }
 
+    @CacheEvict(value = {"cacheListarTodosOsJogos", "cacheListarUmJogo"}, allEntries = true)
     @Operation(summary = "Endpoint que cria um jogo.")
     @PostMapping
     public ResponseEntity<JogoResponseDto> registrarJogo(@RequestBody @Valid JogoRequestDto jogoRequestDto) {
@@ -48,6 +53,7 @@ public class JogoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(jogo);
     }
 
+    @CacheEvict(value = {"cacheListarTodosOsJogos", "cacheListarUmJogo"}, allEntries = true)
     @Operation(summary = "Endpoint que modifica as informações de um jogo já existente, a partir do ID fornecido.")
     @PutMapping("/{id}")
     public ResponseEntity<JogoResponseDto> atualizarJogo(@PathVariable Long id,
@@ -57,6 +63,7 @@ public class JogoController {
         return ResponseEntity.ok(jogo);
     }
 
+    @CacheEvict(value = {"cacheListarTodosOsJogos", "cacheListarUmJogo"}, allEntries = true)
     @Operation(summary = "Endpoint que deleta um jogo, a partir do ID fornecido.")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarJogo(@PathVariable Long id) {
